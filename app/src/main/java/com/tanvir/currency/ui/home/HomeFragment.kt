@@ -82,23 +82,26 @@ class HomeFragment : Fragment() , LifecycleObserver {
 
         }
         currencyViewModel.showLoading.set(true)
-        currencyViewModel.getAllCurrencyRates()?.observe(viewLifecycleOwner, {
+        currencyViewModel.getAllCurrencyRates()?.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 currencyViewModel.showLoading.set(false)
                 countriesAdapter.setCurrencyRateList(it)
                 setSpinner(it)
+            } else {
+
+                // show error
+                Toast.makeText(
+                    context,
+                    "You have exceeded the maximum rate limitation allowed on your subscription plan. Please refer to the \\\"Rate Limits\\\" section of the API Documentation for details. ",
+                    Toast.LENGTH_LONG
+                ).show()
+
             }
-            else {
+        }
 
-              // show error
-                Toast.makeText(context,"You have exceeded the maximum rate limitation allowed on your subscription plan. Please refer to the \\\"Rate Limits\\\" section of the API Documentation for details. ", Toast.LENGTH_LONG).show()
-
-            }
-        })
-
-        currencyViewModel.mCurrentCurrency.observe(viewLifecycleOwner, {
+        currencyViewModel.mCurrentCurrency.observe(viewLifecycleOwner) {
             countriesAdapter.notifyDataSetChanged()
-        })
+        }
 
     }
 
